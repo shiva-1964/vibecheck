@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard Analytics</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+*{
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+
+}
+
+body{
+
+font-family:Arial,sans-serif;
+
+background:
+radial-gradient(circle at top,
+#111122,
+#05050a);
+
+color:white;
+
+min-height:100vh;
+
+}
+
+.navbar{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:25px 40px;
+
+border-bottom:1px solid #222233;
+
+}
+
+.logo{
+
+font-size:20px;
+
+font-weight:bold;
+
+color:#00f5a0;
+
+}
+
+.nav-links{
+
+display:flex;
+
+gap:25px;
+
+}
+
+.nav-links a{
+
+color:white;
+
+text-decoration:none;
+
+}
+
+.nav-links a:hover{
+
+color:#00f5a0;
+
+}
+
+.container{
+
+width:80%;
+
+max-width:1100px;
+
+margin:50px auto;
+
+}
+
+h1{
+
+margin-bottom:30px;
+
+font-size:40px;
+
+}
+
+.stats{
+
+display:flex;
+
+gap:20px;
+
+margin-bottom:40px;
+
+}
+
+.card{
+
+background:rgba(20,20,35,.9);
+
+padding:25px;
+
+border-radius:18px;
+
+border:1px solid #222233;
+
+flex:1;
+
+transition:.3s;
+
+}
+
+.card:hover{
+
+transform:translateY(-5px);
+
+box-shadow:
+0 0 20px rgba(
+0,
+245,
+160,
+0.15
+);
+
+}
+
+.number{
+
+font-size:40px;
+
+color:#00f5a0;
+
+margin-top:15px;
+
+font-weight:bold;
+
+}
+
+.chart-box{
+
+background:rgba(20,20,35,.9);
+
+padding:30px;
+
+border-radius:18px;
+
+border:1px solid #222233;
+
+}
+
+canvas{
+
+width:100% !important;
+
+height:450px !important;
+
+}
+
+.footer{
+
+text-align:center;
+
+padding:30px;
+
+margin-top:50px;
+
+color:#777;
+
+border-top:1px solid #222233;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+<div class="logo">
+
+⚡ VibeCheck
+
+</div>
+
+<div class="nav-links">
+
+<a href="/">Home</a>
+
+<a href="/history">History</a>
+
+<a href="/dashboard">Dashboard</a>
+
+<a href="#" onclick="confirmLogout()">Logout</a>
+
+</div>
+
+</nav>
+
+<div class="container">
+
+<h1>
+
+📊 Toxicity Analytics Dashboard
+
+</h1>
+
+<div class="stats">
+
+<div class="card">
+
+<div>Total Analyses</div>
+
+<div class="number"
+id="totalAnalyses">
+
+0
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div>Average Toxicity</div>
+
+<div class="number"
+id="avgToxicity">
+
+0%
+
+</div>
+
+</div>
+
+</div>
+
+<div class="chart-box">
+
+<canvas id="toxicityChart">
+
+</canvas>
+
+</div>
+
+</div>
+
+<footer class="footer">
+
+VibeCheck © 2026 • AI Powered Toxicity Analyzer & Positive Communication Assistant
+
+</footer>
+
+<script>
+
+async function loadDashboard(){
+
+const response=
+await fetch('/history-data');
+
+const data=
+await response.json();
+
+document.getElementById(
+'totalAnalyses'
+).textContent=data.length;
+
+let total=0;
+
+data.forEach(item=>{
+
+total+=item.toxicity_score;
+
+});
+
+let avg=0;
+
+if(data.length>0){
+
+avg=(total/data.length)*100;
+
+}
+
+document.getElementById(
+'avgToxicity'
+).textContent=
+Math.round(avg)+'%';
+
+const labels=
+data.map(
+(item,index)=>
+'Analysis '+(index+1)
+);
+
+const scores=
+data.map(
+item=>
+item.toxicity_score*100
+);
+
+new Chart(
+
+document.getElementById(
+'toxicityChart'
+),
+
+{
+
+type:'line',
+
+data:{
+
+labels:labels,
+
+datasets:[{
+
+label:'Toxicity %',
+
+data:scores,
+
+borderColor:'#00f5a0',
+
+backgroundColor:'#00f5a020',
+
+tension:0.4,
+
+fill:true
+
+}]
+
+}
+
+}
+
+);
+
+}
+
+loadDashboard();
+
+</script>
+
+
+<script>
+
+function confirmLogout(){
+
+let result = confirm(
+"Are you sure you want to logout?"
+);
+
+if(result){
+
+window.location.href="/logout";
+
+}
+
+}
+
+</script>
+
+
+
+</body>
+</html>

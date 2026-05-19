@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Analysis History</title>
+
+<style>
+
+*{
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+
+}
+
+body{
+
+font-family:Arial,sans-serif;
+
+background:
+radial-gradient(circle at top,
+#111122,
+#05050a);
+
+color:white;
+
+min-height:100vh;
+
+}
+
+.navbar{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:25px 40px;
+
+border-bottom:1px solid #222233;
+
+}
+
+.logo{
+
+font-size:20px;
+
+font-weight:bold;
+
+color:#00f5a0;
+
+}
+
+.nav-links{
+
+display:flex;
+
+gap:25px;
+
+}
+
+.nav-links a{
+
+color:white;
+
+text-decoration:none;
+
+}
+
+.nav-links a:hover{
+
+color:#00f5a0;
+
+}
+
+.container{
+
+width:80%;
+
+max-width:1000px;
+
+margin:50px auto;
+
+}
+
+h1{
+
+margin-bottom:30px;
+
+font-size:40px;
+
+}
+
+.card{
+
+background:rgba(20,20,35,.9);
+
+padding:25px;
+
+margin-bottom:20px;
+
+border-radius:18px;
+
+border:1px solid #222233;
+
+backdrop-filter:blur(10px);
+
+transition:.3s;
+
+}
+
+.card:hover{
+
+transform:translateY(-5px);
+
+box-shadow:
+0 0 20px rgba(
+0,
+245,
+160,
+0.15
+);
+
+}
+
+.text{
+
+font-size:18px;
+
+margin-bottom:15px;
+
+line-height:1.6;
+
+}
+
+.score{
+
+color:#00f5a0;
+
+margin-bottom:10px;
+
+font-weight:bold;
+
+}
+
+.time{
+
+color:#888;
+
+font-size:13px;
+
+margin-top:10px;
+
+}
+
+.footer{
+
+text-align:center;
+
+padding:30px;
+
+margin-top:50px;
+
+color:#777;
+
+border-top:1px solid #222233;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+<div class="logo">
+
+⚡ VibeCheck
+
+</div>
+
+<div class="nav-links">
+
+<a href="/">Home</a>
+
+<a href="/history">History</a>
+
+<a href="/dashboard">Dashboard</a>
+
+<a href="#" onclick="confirmLogout()">Logout</a>
+
+</div>
+
+</nav>
+
+<div class="container">
+
+<h1>
+📜 Analysis History
+</h1>
+
+<div id="historyContainer">
+
+</div>
+
+</div>
+
+<footer class="footer">
+
+VibeCheck © 2026 • AI Powered Toxicity Analyzer & Positive Communication Assistant
+
+</footer>
+
+<script>
+
+async function loadHistory() {
+
+const response =
+await fetch('/history-data');
+
+const data =
+await response.json();
+
+const container =
+document.getElementById(
+'historyContainer'
+);
+
+container.innerHTML='';
+
+data.forEach(item=>{
+
+container.innerHTML +=`
+
+<div class="card">
+
+<div class="text">
+
+${item.text}
+
+</div>
+
+<div class="score">
+
+Toxicity Score:
+${Math.round(item.toxicity_score*100)}%
+
+</div>
+
+<div>
+
+${item.verdict}
+
+</div>
+
+<div class="time">
+
+${item.timestamp}
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+loadHistory();
+
+</script>
+
+
+<script>
+
+function confirmLogout(){
+
+let result = confirm(
+"Are you sure you want to logout?"
+);
+
+if(result){
+
+window.location.href="/logout";
+
+}
+
+}
+
+</script>
+
+
+</body>
+</html>
