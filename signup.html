@@ -41,6 +41,7 @@
       border-radius: 8px;
       background: #222233;
       color: white;
+      box-sizing: border-box;
     }
 
     button {
@@ -51,6 +52,10 @@
       background: #00f5a0;
       font-weight: bold;
       cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
     }
 
     a {
@@ -73,9 +78,28 @@
 
     <h1>Create Account</h1>
 
-    <input type="text" id="username" placeholder="Username">
+    <input
+      type="text"
+      id="username"
+      placeholder="Enter Username"
+      minlength="3"
+      required
+    >
 
-    <input type="password" id="password" placeholder="Password">
+    <input
+      type="email"
+      id="email"
+      placeholder="Enter Gmail Address"
+      required
+    >
+
+    <input
+      type="password"
+      id="password"
+      placeholder="Enter Password"
+      minlength="6"
+      required
+    >
 
     <button onclick="signup()">Signup</button>
 
@@ -91,10 +115,31 @@
     async function signup() {
 
       const username =
-        document.getElementById('username').value;
+        document.getElementById('username').value.trim();
+
+      const email =
+        document.getElementById('email').value.trim();
 
       const password =
-        document.getElementById('password').value;
+        document.getElementById('password').value.trim();
+
+      if (username.length < 3) {
+        alert("Username must be at least 3 characters");
+        return;
+      }
+
+      const gmailPattern =
+        /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+      if (!gmailPattern.test(email)) {
+        alert("Please enter a valid Gmail address");
+        return;
+      }
+
+      if (password.length < 6) {
+        alert("Password must be at least 6 characters");
+        return;
+      }
 
       const response = await fetch('/signup', {
 
@@ -106,6 +151,7 @@
 
         body: JSON.stringify({
           username,
+          email,
           password
         })
 
